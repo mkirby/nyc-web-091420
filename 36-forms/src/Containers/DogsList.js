@@ -1,35 +1,32 @@
 import React, { Component } from "react";
-import { apiResponse } from '../api'
+import { connect } from 'react-redux'
 import CreateForm from "../Components/CreateForm";
 import DogCard from '../Components/DogCard'
 import SearchForm from "../Components/SearchForm";
+import Counter from '../Components/Counter'
+import { getDogsFromApi } from '../Redux/actions'
 
 class DogsList extends Component {
   state = {
-    api: apiResponse,
-    searchValue: "",
+    searchValue: ""
+  }
+
+  componentDidMount() {
+    this.props.fetchDogs()
   }
 
   renderDogs = () => {
-    // filter and find all the dogs that match
-    let filteredArray = this.state.api.filter(el => el.name.toLowerCase().includes(this.state.searchValue.toLowerCase()))
-    // map through the filtered array 
-    // filter => if you're matching "" it always returns true
+    let filteredArray = this.props.api.filter(el => el.name.toLowerCase().includes(this.state.searchValue.toLowerCase()))
     return filteredArray.map(el => <DogCard key={el.id} dog={el} />)
   }
 
   submitHandler = (dogObj) => {
-    console.log("submitting", dogObj);
-    // take the dogObj
-    // add dogObj to our current api in state 
-    // [1,2,3]
-    this.setState({ api: [...this.state.api, dogObj] });
+    this.setState({ api: [...this.props.api, dogObj] });
   };
 
   searchChangeHandler = (e) => {
     this.setState({ searchValue: e.target.value });
   };
-
 
   render() {
     return (
@@ -37,9 +34,18 @@ class DogsList extends Component {
         <CreateForm submitHandler={this.submitHandler} />
         <SearchForm searchValue={this.state.searchValue} changeHandler={this.searchChangeHandler} />
         <div className="list">{this.renderDogs()}</div>
+        <Counter />
       </>
     );
   }
 }
 
-export default DogsList;
+function mapStateToProps(state) {
+  return { api: state.api }
+}
+
+function mapDispatchToProps(dispatch) {
+  return { fetchDogs: () => dispatch(getDogsFromApi()) }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DogsList);

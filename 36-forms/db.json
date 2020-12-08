@@ -1,4 +1,5 @@
-const apiResponse = [
+{ 
+    "dogs": [
     {
         "id": 1,
         "name": "Ozzy Pawsborne",
@@ -24,7 +25,4 @@ const apiResponse = [
         "breed": "Doberman"
     }
 ]
-
-
-//named export 
-export { apiResponse }
+}

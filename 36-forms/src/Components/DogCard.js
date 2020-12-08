@@ -1,25 +1,18 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
+import { incrementCounter } from "../Redux/actions";
 
-// props = {dog}
 class DogCard extends Component {
-  // let { dog } = props
-  // construction(props){
-  //   super(props)
-  //   this.state = {clicked: false}
-  // }
 
   state = {
     clicked: false
   }
 
   clickHandler = () => {
-    console.log("before setState clicking", this.state.clicked)
-    this.setState({ clicked: !this.state.clicked }, () => console.log("after setState clicking", this.state.clicked)
+    console.log(this.props)
+    this.props.increment()
+    this.setState({ clicked: !this.state.clicked }
     )
-
-    // functional setState
-    // this.setState((prevState) => ({ clicked: !prevState.clicked }))
-
   }
 
   render() {
@@ -39,8 +32,8 @@ class DogCard extends Component {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return { increment: () => dispatch(incrementCounter())}
+}
 
-// state
-// lifecycle method 
-
-export default DogCard;
+export default connect(null, mapDispatchToProps)(DogCard);
